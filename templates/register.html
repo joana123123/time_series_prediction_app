@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+       .register-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 400px;
+            transition: box-shadow 0.3s ease;
+        }
+
+       .register-container:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+       .register-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+       .form-group {
+            margin-bottom: 20px;
+        }
+
+       .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+       .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+       .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+       .form-group button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+       .form-group button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+       .form-group button:active {
+            transform: translateY(0);
+        }
+
+       .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+       .login-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+       .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <h2>注册账号</h2>
+        <form id="registerForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">确认密码</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">注册</button>
+            </div>
+        </form>
+        <p class="login-link">已有账号？<a href="http://localhost:3940/login">登录</a></p>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+
+        registerForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+            //let用于声明变量的关键字，用于定义一个块级作用域的局部变量，意味着let只在声明它的代码块内有效
+
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致，请重新输入。');
+                return;
+            }
+
+            //两次输入的密码一致，从表单元素中收集数据
+            let username = document.getElementById('username').value;
+            let email = document.getElementById('email').value;
+            //创建表单并且像表单中添加数据
+            const formData = new FormData();
+            formData.append('username',username);
+            formData.append('password',password);
+            formData.append('email',email)
+            // 这里可以添加将表单数据发送到后端的逻辑
+
+
+            //发送数据到后端路由
+            fetch('/register_judge',{
+                method:'POST',
+                body:formData
+                })
+
+            //后端返回的信息
+            //数据发送之后的响应
+                .then(response=>response.json())    //将相应解析成JSON格式
+                .then(data=>{
+                    //data是解析之后的数据
+                    if (data.success)
+                        //表示注册成功
+                    {
+                        alert('注册成功')
+                        window.location.href = '/login';//跳转到登录页面
+                    }
+                    else
+                    {
+                        //如果注册失败显示错误信息
+                        alert(data.message);
+                        registerForm.reset();
+                    }
+                })
+                .catch(error=>
+                    {
+                        //如果发生错误，显示错误信息
+                        console.error('Error:',error);
+                        alert('注册过程中发生错误，请稍候重试');
+                    }
+                )
+            // 清空表单
+            registerForm.reset();
+        });
+    </script>
+</body>
+
+</html>

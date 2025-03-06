@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的数据</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* 设置字体 */
+            background-color: #f4f4f4; /* 设置背景颜色 */
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+            padding: 20px;
+            margin: 0;
+            background-color: #e0e0e0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            padding: 20px;
+            margin: 0;
+            color: #666;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+    <h2>个人数据</h2>
+    {% if data is string %}
+    <pre>
+        {% set parts = data.split(',') %}
+        {% for part in parts %}
+        {{ part.strip() }}<br>
+        {% endfor %}
+    </pre>
+    {% else %}
+    <p>{{ data }}</p>
+    {% endif %}
+</body>
+
+</body>
+
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+        }
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .main-content {
+            flex: 1;
+            margin-left: 20px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            background: linear-gradient(to right, #4CAF50, #78B4A7);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .profile-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+        .profile-info {
+            margin-top: 15px;
+        }
+        .profile-info h2 {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        .profile-info p {
+            color: #b2dfdb;
+            font-size: 1.1em;
+        }
+        .profile-buttons {
+            margin-top: 15px;
+        }
+        .profile-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #81c784, #388e3c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .profile-button:hover {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            transform: translateY(-2px);
+        }
+        .menu {
+            list-style-type: none;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            font-size: 1.1em;
+            color: #333;
+            cursor: pointer;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item i {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #66bb6a;
+        }
+        .menu-item:hover {
+            background-color: #e0f7fa;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .menu-tab {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(to right, #4CAF50, #78B4A7);
+            padding: 10px 0;
+        }
+        .menu-tab a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.1em;
+        }
+        .menu-tab a.active {
+            background-color: #66bb6a;
+        }
+        .menu-tab a:hover {
+            background-color: #66bb6a;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar {
+            width: 250px;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+        }
+        .sidebar ul {
+            padding-left: 15px;
+            list-style-type: none;
+        }
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+        .edit-form {
+            display: none; /* 初始隐藏 */
+            margin-top: 20px;
+        }
+        .edit-form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .edit-form input, .edit-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .save-button {
+            background: #4CAF50; /* 保存按钮颜色 */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .record-list {
+            margin-top: 20px;
+        }
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .delete-button {
+            color: red;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            text-decoration: underline;
+        }
+        .favorite-list {
+            margin-top: 20px;
+            display: none; /* 初始隐藏 */
+        }
+        .favorite-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .dislike-list {
+            margin-top: 20px;
+            display: none; /* 初始隐藏 */
+        }
+        .dislike-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+         .logout-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #81c784, #388e3c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+       .logout-button:hover {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            transform: translateY(-2px);
+        }
+
+       .upload-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #81c784, #388e3c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 20px;
+            right: 80px; /* 增大 right 的值，让按钮右移，这里从 170px 调整为 80px */
+        }
+
+       .upload-button:hover {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            transform: translateY(-2px);
+        }
+        /* 新增注销按钮样式 */
+        .cancel-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 20px;
+            right: 140px;
+        }
+        .cancel-button:hover {
+            background: linear-gradient(135deg, #66bb6a, #2e7d32);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div style="position: relative;">
+        <button class="logout-button" onclick="logout()">登出</button>
+        <button class="upload-button" onclick="go_upload()">上传</button>
+         <button class="cancel-button" onclick="confirmCancel()">注销</button>
+<!--        设置了登出的函数-->
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-header">
+                <img src="avatar.png" alt="用户头像">
+                <div class="profile-info">
+                    <h2 id="username-display">{{user_id}}</h2>
+                    <div class="profile-buttons">
+                        <button class="profile-button" data-content="我的关注动态">关注 (1)</button>
+                        <button class="profile-button" data-content="我的粉丝动态">粉丝 (0)</button>
+                    </div>
+                </div>
+            </div>
+            <ul class="menu">
+                <li class="menu-item" data-content="编辑资料内容"><i class="icon">&#xe600;</i> 编辑资料</li>
+                <li class="menu-item" data-content="浏览记录内容"><i class="icon">&#xe601;</i> 浏览记录</li>
+                <li class="menu-item" onclick="goTomyData()"><i class="icon">&#xe602;</i> 我的数据</li>
+                <li class="menu-item" data-content="我的模型内容"><i class="icon">&#xe603;</i> 现有模型</li>
+<!--                <li class="menu-item" data-content="我的评分内容"><i class="icon">&#xe604;</i> 我的评分</li>-->
+<!--                <li class="menu-item" data-content="我的缓存内容"><i class="icon">&#xe605;</i> 我的缓存</li>-->
+<!--                <li class="menu-item" data-content="黑名单内容"><i class="icon">&#xe606;</i> 黑名单</li>-->
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="menu-tab">
+                <a href="http://127.0.0.1:3940"  class="active">首页</a>
+                <a href="http://127.0.0.1:3940/rate" >评分</a>
+            </div>
+
+            <div id="dynamic-content">
+                <h3>欢迎来到个人中心</h3>
+                <p>点击左侧菜单项，查看不同内容。</p>
+            </div>
+
+            <h1>猜你喜欢</h1>
+            <div>
+                <h3>{{user_interest}}</h3>
+
+            </div>
+            <!-- 新增编辑表单 -->
+            <div class="edit-form" id="edit-form">
+                <h3>编辑资料</h3>
+                <label for="username">{{user_name}}</label>
+                <input type="text" id="username" value="手机用户6858qffpj">
+
+                <label for="email">邮箱</label>
+                <input type="email" id="email" placeholder="请输入邮箱">
+
+                <label for="bio">简介</label>
+                <textarea id="bio" rows="4" placeholder="请输入您的简介"></textarea>
+
+                <button class="save-button" id="save-button">保存</button>
+            </div>
+
+            <!-- 浏览记录区域 -->
+
+            <!-- 我的数据 -->
+            <div class="favorite-list" id="favorite-list">
+                <h3>我的收藏</h3>
+                <ul id="favorite-container"></ul>
+                <p>当前收藏数量: <span id="favorite-count">0</span></p>
+            </div>
+
+            <!-- 收藏区域 -->
+            <div class="dislike-list" id="dislike-list">
+                <h3>黑名单</h3>
+                <ul id="dislike-container"></ul>
+                <p>当前黑名单数量: <span id="dislike-count">0</span></p>
+            </div>
+        </div>
+    </div>
+
+ <script>
+     function logout()
+     {
+         if(confirm("是否确定登出")) {
+             window.location.href = 'http://127.0.0.1:3940/login';
+             //发送数据到后端路由，表示用户已经登出
+             fetch('logout',
+                 {
+                     method: 'POST',
+                     body: '已登出'
+                 })
+
+                 //后端返回的消息，但是这里是空的
+                 .then(response => response.json())
+                 .then(data => {
+
+                 })
+         }
+     }
+
+     function go_upload()
+     {
+         //定向到upload页面
+         window.location.href = 'http://127.0.0.1:3940/upload';
+     }
+
+     function confirmCancel()
+     {
+        if (confirm("确认要注销账号吗1？此操作不可逆!"))
+        {
+            //确认之后跳转到登录页面
+            window.location.href = "http://127.0.0.1:3940/login";
+            //向服务器发送注销代码
+            fetch('cancel_account',{
+                method:'POST',
+                body:'注销账号'
+                })
+                //由这个显示但是实际上不进行任何的操作
+                .then(response => response.json())
+                .then(data=>{
+
+                });
+        }
+     }
+
+     //跳转到我的数据这个页面
+     function goTomyData()
+     {
+            window.location.href = "http://127.0.0.1:3940/my_data";
+     }
+ </script>
+
+</body>
+</html>

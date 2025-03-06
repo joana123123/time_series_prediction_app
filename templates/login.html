@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* 清新的暖色渐变 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 400px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em; /* 增加标题大小 */
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group input:focus {
+            border-color: #ff7e5f; /* 聚焦时的颜色 */
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 126, 95, 0.5);
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff7e5f; /* 按钮颜色 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+        .form-group button:hover {
+            background-color: #feb47b; /* 悬停时的颜色 */
+            transform: translateY(-1px);
+        }
+
+        .form-group button:active {
+            transform: translateY(0);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #ff7e5f;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+
+        @media (max-width: 500px) {
+            .login-container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+    <form id = "loginForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+     <div class="register-link">
+            <a href="/register">没有账号？点击注册</a>
+        </div>
+    </div>
+</div>
+
+<script>
+  //发送给后端的信息
+    // 为表单添加监听事件
+    var element = document.getElementById('loginForm');
+    element.addEventListener('submit',function (event){
+        event.preventDefault()   //阻止表单的默认提交行为
+
+        // 从表单元素收集数据
+        // 手机输入框的值
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+        //创建FormData对象
+        const formData = new FormData();
+        //向表单中添加新数据
+        formData.append('username',username);
+        formData.append('password',password);
+
+        //发送数据到后端路由
+        fetch('/login_judge',{
+            method:'POST',
+            body:formData
+        })
+
+
+                //后端返回的信息
+            // 数据发送之后的响应
+                .then(response=>response.json())   //将相应解析成JSON格式
+            .then(data => {
+              //data接收异步操作的结果response作为变量名,data是解析之后的Json数据
+              if (data.success){
+                //表示登录成功
+                window.location.href = '/own';//跳转到个人页面
+              }
+               else
+              {
+                 // print(data)
+                //如果登录失败显示错误信息
+                alert(data.message||"登录失败，请检查用户名和密码");
+                loginForm.reset();
+              }
+            })
+                .catch(error=>
+      {
+        //如果发生错误，显示错误信息
+        console.error('Error:',error)
+        alter('登录过程中发生错误，请稍候重试');
+      });
+    });
+</script>
+</body>
+</html>

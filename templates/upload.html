@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f0f9ff, #cbebff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 500px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .file-input,
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .file-input label,
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .file-input input[type="file"],
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-input input[type="file"]:focus,
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .upload-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+        .upload-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .upload-button:active {
+            transform: translateY(0);
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            color: #333;
+            text-align: center;
+        }
+
+        /*登录和注册按钮的链接*/
+        .links {
+            text-align: right;
+            font-size: 20px;
+        }
+
+       .links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+            border: 1px solid #007bff; /* 添加边框 */
+            border-radius: 4px; /* 边框圆角 */
+            padding: 8px 12px; /* 内边距 */
+            display: inline-block; /* 使链接变为块级元素，便于设置宽度和高度 */
+            transition: background-color 0.3s, color 0.3s; /* 过渡效果 */
+        }
+
+       .links a:hover {
+            text-decoration: none;
+            background-color: #007bff; /* 悬停时背景颜色 */
+            color: white; /* 悬停时文字颜色 */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+         <div class="links">
+            <a href="http://127.0.0.1:3940/login">登录</a>
+            <a href="http://127.0.0.1:3940/register">注册</a>
+        </div>
+        <h2>上传文件</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="file-input">
+                <label for="file">选择数据文件: </label>
+                <input type="file" id="file" name="file" accept=".csv" required>
+            </div>
+<!--            <div class="form-group">-->
+<!--                <label for="is_training">是否训练</label>-->
+<!--                <input type="text" id="is_training" name="is_training">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="model">选择模型类型</label>-->
+<!--                <select id="model" name="model">-->
+<!--                    <option value="LinearRegression">TimeMixer</option>-->
+<!--                    <option value="DecisionTree">Timesnet</option>-->
+<!--                </select>-->
+<!--            </div>-->
+            <div class="form-group">
+                <label for="data">数据名称</label>
+                <input type="text" id="data" name="data">
+            </div>
+<!--            <div class="form-group">-->
+<!--                <label for="target">预测目标</label>-->
+<!--                <input type="text" id="target" name="target">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="pred_len">预测长度</label>-->
+<!--                <input type="number" id="pred_len" name="pred_len">-->
+<!--            </div>-->
+            <button type="submit" class="upload-button">上传</button>
+        </form>
+        <div class="response" id="response"></div>
+    </div>
+
+    <script>
+        // 为特定ID的表单添加监听事件
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // 阻止表单默认提交行为
+
+            // 获取文件对象
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('请选择一个文件!');
+                return;
+            }
+            // 获取输入框的值
+            //let is_training = document.getElementById('is_training').value;
+            //let model = document.getElementById('model').value;
+            let data = document.getElementById('data').value;
+            //let target = document.getElementById('target').value;
+            //let pred_len = document.getElementById('pred_len').value;
+
+            // 创建FormData对象
+            const formData = new FormData();
+            formData.append('file', file);
+            //formData.append('is_training', is_training);
+            //formData.append('model', model);
+            formData.append('data', data);
+            //formData.append('target', target);
+            //formData.append('pred_len', pred_len);
+
+            //document.getElementById('response').innerText = '正在上传...';
+
+            // 发起AJAX请求将文件发送到服务器
+            fetch('/upload_deal', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error)
+                {
+                        //有三个错误条件
+                    //1. 需要登录之后才能上传数据
+                    //2. 上传的文件不能是空的
+                    //3. 上传的必须是.csv文件
+                        alert(data.error)
+                        uploadForm.reset();
+                } else
+                {
+                    document.getElementById('response').innerText = `Success: ${data.message}`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+
+</html>

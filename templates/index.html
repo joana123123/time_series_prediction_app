@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+       .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            width: 100%;
+
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>欢迎来到主页</h1>
+        <button id="loginBtn">登录</button>
+        <button id="registerBtn">注册</button>
+        <button id="uploadBtn">上传</button>
+    </div>
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            // 这里可以添加登录逻辑，例如跳转到登录页面
+            window.location.href = 'http://127.0.0.1:3940/login';
+        });
+
+        document.getElementById('registerBtn').addEventListener('click', function () {
+            // 这里可以添加注册逻辑，例如跳转到注册页面
+            window.location.href ='http://127.0.0.1:3940/register';
+        });
+
+        document.getElementById('uploadBtn').addEventListener('click', function () {
+            // 这里可以添加上传逻辑，例如跳转到上传页面
+            window.location.href = 'http://127.0.0.1:3940/upload';
+        });
+    </script>
+</body>
+
+</html>
