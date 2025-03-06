@@ -4,7 +4,7 @@ import subprocess
 import pandas as pd
 import numpy as np
 import os
-
+import pymysql
 def register_judge_1(username,password,email):
     #前端传来的password是str类型，需要转成int再存
     password = int(password)
@@ -28,8 +28,42 @@ def register_judge_1(username,password,email):
             'personal_data':'',   #显示设为空的字符串，因为用户一开始没有传入数据
             'personal_model':'',  #显示设为空的字符串，因为用户一开始没有传入数据
         }
+
+        conn = pymysql.connect(
+            host='localhost',  # 数据库主机地址，本地数据库一般为 'localhost'
+            user='root',  # 数据库用户名
+            password='1234567',  # 数据库密码，替换为你自己设置的密码
+            database='test_db',  # 要连接的数据库名，如果不存在需要先创建
+            charset='utf8mb4'  # 字符编码
+        )
+        # try:
+        #     # 创建游标对象
+        #     cursor = conn.cursor()
+        #     # 执行创建数据库的 SQL 语句
+        #     cursor.execute("CREATE DATABASE IF NOT EXISTS test_db")
+        #     print("数据库创建成功！")
+        # except pymysql.Error as e:
+        #     print(f"数据库创建失败：{e}")
+
+        try:
+            cursor = conn.cursor()
+            # 定义插入数据的 SQL 语句
+            insert_sql = "INSERT INTO user (username, password,email) VALUES (%s, %s,%s)"
+            data = (username, password, email)
+            cursor.execute(insert_sql, data)
+            # 提交事务
+            conn.commit()
+            print("数据插入成功！")
+        except pymysql.Error as e:
+            # 回滚事务
+            conn.rollback()
+            print(f"数据插入失败：{e}")
+        finally:
+            if conn:
+                conn.close()
+
         #以追加模式写入一个新的用户数据
-        file_path = r'D:\25服创和计设\front_end_3\User_data\user_data_1.csv'
+        file_path = r'.\User_data\user_data_1.csv'
         with open(file_path,'a',newline='',encoding='utf-8') as file:
             fieldnames = ['username','password','email','personal_data','personal_model']
             writer = csv.DictWriter(file,fieldnames=fieldnames)
@@ -37,7 +71,7 @@ def register_judge_1(username,password,email):
 
 
         #为用户建立一个新的文件夹，保存每个用户自己的数据和模型以及配置
-        folder_path = r"D:/25_fwwb/upload/" + username
+        folder_path = r"./" + username
         # 创建文件夹
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
